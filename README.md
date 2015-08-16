@@ -1,4 +1,4 @@
-# DataCamp Intro to Computational Finance with R
+## DataCamp Intro to Computational Finance with R
 
 DataCamp Intro to Computational Finance with R
 By Eric Zivot University of Washington
