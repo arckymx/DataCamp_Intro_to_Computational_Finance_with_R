@@ -1,5 +1,5 @@
 ---
-title: "Lab2 Random Variables and Probabilities"
+title: "Lab 2 Random Variables and Probabilities"
 author: "Meraxa"
 date: "September, 2015"
 output: html_document
