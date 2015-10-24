@@ -1,6 +1,6 @@
 ---
 title: "Lab 2 Random Variables and Probabilities"
-author: "Meraxa"
+author: "T.A. Meraxa"
 date: "September, 2015"
 output: html_document
 ---
@@ -299,62 +299,3 @@ xC <- 2000/10000
 # Simple monthly return
 xA*RA + xC*RC
 ```
-
-***
-### 13. Covariance matrix
-
-In this lab you will learn to draw observations from bivariate normal distributions, and explore the resulting data to familiarize yourself with relationships between two random variables.
-
-Let us assume that $X$ and $Y$ are bivariate normally distributed. Get started by defining a covariance matrix. Suppose that the standard deviations are $σ_X=0.10$ and $σ_Y=0.05$, and that the correlation is $ρ_XY=0.9$.
-
-Matrices can be created with the `matrix()` function. You should supply the values as the first argument and specify the dimensions with the `nrow` and  `ncol` arguments. For example, `matrix(c(-0.5, 0.5), nrow = 1, ncol = 2)` creates a matrix with one row and two columns. By default, the matrix is filled column by column, but you can fill the matrix row by row by setting  `byrow = TRUE`.
-
-#### Instructions
-* Compute the covariance between X and Y and assign it to sig_xy.
-* Construct the covariance matrix and assign it to Sigma_xy.
-```{r, eval=FALSE}
-# Standard deviations and correlation
-sig_x <- 0.10
-sig_y <- 0.05
-rho_xy <- 0.9
-
-# Covariance between X and Y
-sig_xy <- rho_xy*sig_x*sig_y 
-
-# Covariance matrix
-Sigma_xy <-  matrix(c(sig_x^2, sig_xy, sig_xy, sig_y^2), 2, 2, byrow=TRUE)
-```
-
-***
-### 14. Simulate data
-
-Let us continue by simulating observations from the bivariate normally distributed random variables $X$ and $Y$.
-
-Notice that the second line in the R script on the right loads the mvtnorm R package. `mvtnorm` is an R library, containing extra functionality (see mvtnorm documentation), which makes it easy to simulate data from a bivariate (or more generally, a multivariate) normal distribution. We will be using the `rmvnorm()` function from the package. If you would like to use the `mvtnorm` package at home, use the `install.packages` function to first install the package on your own computer.
-
-You can supply the mean vector and the covariance matrix via the arguments  `mean` and `sigma`, of the `rmvnorm()` function respectively. For instance, you can draw 10 observations from a bivariate standard normal distribution with `rmvnorm(10, mean = c(0, 0), sigma = diag(2))`.
-
-When you simulate data, it is often useful to have *reproducible results*. This can be achieved by setting the seed of the random number generator beforehand with the `set.seed()` function. For more information, see the documentation on random number generation.
-
-####  Instructions
-* Simulate 100 observations from the bivariate normal distributed random variables $X$ and $Y$. Use the covariance matrix `Sigma_xy` from the previous exercise and suppose that the means are $μ_X=0.05$ and $μ_Y=0.025$. Assign the result to `xy_vals`.
-* Have a look at the first few observations with the `head()` function.
-
-```{r, eval=FALSE}
-# Load the mvtnorm package
-library("mvtnorm")
-
-# The covariance matrix (Sigma_xy) is still in your workspace
-
-# Means
-mu_x <- 0.05
-mu_y <- 0.025
-
-# Simulate 100 observations
-set.seed(123)  # for reproducibility
-xy_vals <- rmvnorm(100, mean = c(mu_x, mu_y), sigma = Sigma_xy)
-  
-# Have a look at the first observations
-head(xy_vals)
-```
-
