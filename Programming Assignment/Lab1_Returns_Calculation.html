@@ -204,7 +204,58 @@ legend(x='topleft',legend='SBUX', lty=1, lwd=2, col='blue')</code></pre>
 <p>the percentage price difference.</p>
 <p>Your task in this exercise is to compute the simple returns for every time point n. The fact that R is vectorized makes that relatively easy. In case you would like to calculate the price difference over time, you can use</p>
 <p><code>sbux_prices_df[2:n,1] - sbux_prices_df[1:(n-1),1]</code></p>
-<p>Think about why this indeed calculates the price difference for all time periods. The first vector contains all prices, except the price on the first day. The second vector contains all prices except the price on the last day. Given the fact that R takes the element-wise difference of these vectors, you get <span class="math">\({P_{t}-P_{t-1}}\)</span> for every t.</p>
+<p>Think about why this indeed calculates the price difference for all time periods. The first vector contains all prices, except the price on the first day. The second vector contains all prices except the price on the last day. Given the fact that R takes the element-wise difference of these vectors, you get <span class="math">\({P_{t}-P_{t-1}}\)</span> for every <span class="math">\(t\)</span>.</p>
+<div id="instructions-4" class="section level4">
+<h4>Instructions</h4>
+<ul>
+<li>Assign to sbux_ret the simple returns for the Starbucks stock.</li>
+</ul>
+<pre class="r"><code># The sbux_df data frame is already loaded in your work space
+sbux_prices_df &lt;- sbux_df[, &quot;Adj.Close&quot;, drop=FALSE]
+
+# Denote n the number of time periods
+n &lt;- nrow(sbux_prices_df)
+sbux_ret &lt;- (sbux_prices_df[2:n,1] - sbux_prices_df[1:(n-1),1])/sbux_prices_df[1:(n-1),1]
+
+# Notice that sbux_ret is not a data frame object
+class(sbux_ret)
+sbux_ret</code></pre>
+<hr />
+</div>
+</div>
+<div id="add-dates-to-simple-return-vector" class="section level3">
+<h3>7 Add dates to simple return vector</h3>
+<p>The vector <code>sbux_ret</code> now contains the simple returns of Starbucks (well done!). It would be convenient to have the dates as names for the elements of that vector. Remember that the trading dates were in the first column of the <code>sbux_df</code> data frame. To set the names of a vector, you can use <code>names(vector) &lt;- some_names</code>.</p>
+<p>Remember that we are dealing with closing prices. The first return in sbux_df is thus realized on the second day, or <code>sbux_prices_df[2,1]</code>.</p>
+<div id="instructions-5" class="section level4">
+<h4>Instructions</h4>
+<ul>
+<li>Assign the correct dates as names to all elements of the return vector <code>sbux_ret</code>.</li>
+<li>Use the <code>head()</code> function to display the first elements of sbux_ret.</li>
+</ul>
+<pre class="r"><code># The sbux_df data frame is already loaded in your work space
+sbux_prices_df &lt;- sbux_df[, &quot;Adj.Close&quot;, drop=FALSE]
+
+# Denote n the number of time periods:
+n &lt;- nrow(sbux_prices_df)
+sbux_ret &lt;- ((sbux_prices_df[2:n, 1] - sbux_prices_df[1:(n-1), 1])/sbux_prices_df[1:(n-1), 1])
+
+# Notice that sbux_ret is not a data frame object
+class(sbux_ret)
+
+# Now add dates as names to the vector and print the first elements of sbux_ret to the console to check
+names(sbux_ret) &lt;- sbux_df [2:n, 1]
+head(sbux_ret)
+sbux_ret</code></pre>
+</div>
+</div>
+<div id="compute-continuously-compounded-1-month-returns" class="section level3">
+<h3>8 Compute continuously compounded 1-month returns</h3>
+<p>As you might remember from class, the relation between single-period and multi-period returns is multiplicative for single returns. That is not very convenient. The yearly return is for example the geometric average of the monthly returns.</p>
+<p>Therefore, in practice you will often use continuously compounded returns. These returns have an additive relationship between single and multi-period returns and are defined as</p>
+<p><span class="math">\[Rt = ln(1+R_{t})\]</span></p>
+<p>with <span class="math">\(Rt\)</span> the simple return and <span class="math">\(rt\)</span> the continuously compounded return at moment <span class="math">\(t\)</span>. Continuously compounded returns can be computed easily in R by realizing that</p>
+<p><span class="math">\[Rt = ln(P_{t})-ln(P_{t-1})\]</span></p>
 </div>
 
 

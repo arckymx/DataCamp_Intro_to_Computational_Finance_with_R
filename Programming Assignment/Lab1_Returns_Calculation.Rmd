@@ -157,3 +157,142 @@ Your task in this exercise is to compute the simple returns for every time point
 `sbux_prices_df[2:n,1] - sbux_prices_df[1:(n-1),1]`
 
 Think about why this indeed calculates the price difference for all time periods. The first vector contains all prices, except the price on the first day. The second vector contains all prices except the price on the last day. Given the fact that R takes the element-wise difference of these vectors, you get ${P_{t}-P_{t-1}}$ for every $t$.
+
+#### Instructions
+* Assign to sbux_ret the simple returns for the Starbucks stock.
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+sbux_prices_df <- sbux_df[, "Adj.Close", drop=FALSE]
+
+# Denote n the number of time periods
+n <- nrow(sbux_prices_df)
+sbux_ret <- (sbux_prices_df[2:n,1] - sbux_prices_df[1:(n-1),1])/sbux_prices_df[1:(n-1),1]
+
+# Notice that sbux_ret is not a data frame object
+class(sbux_ret)
+sbux_ret
+```
+
+
+***
+### 7 Add dates to simple return vector
+
+The vector `sbux_ret` now contains the simple returns of Starbucks (well done!). It would be convenient to have the dates as names for the elements of that vector. Remember that the trading dates were in the first column of the `sbux_df` data frame. To set the names of a vector, you can use `names(vector) <- some_names`.
+
+Remember that we are dealing with closing prices. The first return in sbux_df is thus realized on the second day, or `sbux_prices_df[2,1]`.
+
+#### Instructions
+* Assign the correct dates as names to all elements of the return vector `sbux_ret`.
+* Use the `head()` function to display the first elements of sbux_ret.
+
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+sbux_prices_df <- sbux_df[, "Adj.Close", drop=FALSE]
+
+# Denote n the number of time periods:
+n <- nrow(sbux_prices_df)
+sbux_ret <- ((sbux_prices_df[2:n, 1] - sbux_prices_df[1:(n-1), 1])/sbux_prices_df[1:(n-1), 1])
+
+# Notice that sbux_ret is not a data frame object
+class(sbux_ret)
+
+# Now add dates as names to the vector and print the first elements of sbux_ret to the console to check
+names(sbux_ret) <- sbux_df [2:n, 1]
+head(sbux_ret)
+sbux_ret
+```
+
+***
+### 8 Compute continuously compounded 1-month returns
+
+As you might remember from class, the relation between single-period and multi-period returns is multiplicative for single returns. That is not very convenient. The yearly return is for example the geometric average of the monthly returns.
+
+Therefore, in practice you will often use continuously compounded returns. These returns have an additive relationship between single and multi-period returns and are defined as
+
+$$Rt = ln(1+R_{t})$$
+
+with $Rt$ the simple return and $rt$ the continuously compounded return at moment $t$.
+Continuously compounded returns can be computed easily in R by realizing that
+
+$$Rt = ln(P_{t})-ln(P_{t-1})$$
+
+In R, the log price can be easily computed through `log(price)`. Notice how the `log()` function in R actually computes the natural logarithm.
+
+#### Instructions
+* Compute the continuously compounded returns and assign to `sbux_ccret`.
+* Set the names of the `sbux_ccret` to the correct dates, as you did in the previous exercise.
+* Use the `head()` function to display the first elements of `sbux_ccret`.
+
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+sbux_prices_df <- sbux_df[, "Adj.Close", drop=FALSE]
+
+# Denote n the number of time periods:
+n <- nrow(sbux_prices_df)
+sbux_ret <- ((sbux_prices_df[2:n, 1] - sbux_prices_df[1:(n-1), 1])/sbux_prices_df[1:(n-1), 1])
+
+# Compute continuously compounded 1-month returns
+sbux_ccret <- log(sbux_prices_df[2:n, 1]) - log(sbux_prices_df[1:(n-1), 1])
+
+# Assign names to the continuously compounded 1-month returns
+names(sbux_ccret) <- sbux_df[2:n,1]
+
+# Show sbux_ccret
+head(sbux_ccret)
+```
+
+
+***
+### 9 Compare simple and continuously compounded returns
+
+You would like to compare the simple and the continuously compounded returns. In the next exercise, you will do that by generating two graphs. In this exercise, you will just have a quick look at the data. It would be nice to have the simple and continuously compounded return next to each other in a matrix, with n rows and two columns. You can use the `cbind()` function to paste the two vectors that contain both types of returns next to each other in a matrix.
+
+#### Instructions
+* Use the `cbind()` and `head()` functions to display the simple and continuously compounded returns next to each other for the first time periods. What do you notice?
+
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+sbux_prices_df <- sbux_df[, "Adj.Close", drop=FALSE]
+
+# Denote n the number of time periods:
+n <- nrow(sbux_prices_df)
+sbux_ret <- ((sbux_prices_df[2:n, 1] - sbux_prices_df[1:(n-1), 1])/sbux_prices_df[1:(n-1), 1])
+
+# Compute continuously compounded 1-month returns
+sbux_ccret <- log(sbux_prices_df[2:n,1]) - log(sbux_prices_df[1:(n-1),1])
+names(sbux_ccret) <- sbux_df[2:n,1]
+head(sbux_ccret)
+
+# Compare the simple and cc returns
+head(cbind(sbux_ccret, sbux_ret))
+```
+
+***
+### 10 Graphically compare the simple and continuously compounded returns
+
+In this exercise, you will create a plot that contains both the simple and continuously compounded returns. This makes it easy to compare both types of returns.
+
+Have a look at the sample code on the right. First of all, we have to plot the simple returns as a function of time. The argument type=l specifies a line plot, col=blue specifies that the simple returns line is blue, lwd=2 specifies the line thickness, ylab="Return" specifies that "Return" is the label of the y-axis and main specifies the plot's main title.
+
+####  Instructions
+* Your task is to add the continuously compounded returns to the plot. This can be done with the `lines()` function, having `sbux_ccret` as a first argument. Furthermore, the line should be red and its thickness should be set to 2. You can do that by setting the `col` and `lwd` arguments.
+
+```{r, eval=FALSE}
+# The simple returns (sbux_ret) and the continuously compounded returns (sbux_ccret) have been preloaded in your workspace
+
+# Plot the returns on the same graph
+plot(sbux_ret, type="l", col="blue", lwd=2, ylab="Return",
+               main="Monthly Returns on SBUX")
+
+# Add horizontal line at zero
+abline(h=0)
+
+# Add a legend
+legend(x="bottomright", legend=c("Simple", "CC"), 
+       lty=1, lwd=2, col=c("blue","red"))
+
+# Add the continuously compounded returns
+lines(sbux_ccret,
+    col = "red",
+    lwd = 2)
+```
