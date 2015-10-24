@@ -101,3 +101,59 @@ some_prices <- sbux_df[index_1:index_2, "Adj.Close"]
 ```
 
 ***
+### 5 Subset directly on dates
+
+The way you selected the data from a specific trading day in the previous exercise was not very convenient, right?
+When you create a data frame that has the dates of the stock price as row names, you can select the price on a specific day much more easily. The sample code on the right creates a new data frame ``sbux_prices_df`` that has the trading days as row names. You can select the price on 3/1/1994 now simply with ``sbux_prices_df["3/1/1994", 1]``.
+
+####  Instructions
+* Assign to price_1 the Starbucks stock price on 3/1/1994.
+* Assign to price_2 the Starbucks stock price on 3/1/1995.
+
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+
+# Create a new data frame that contains the price data with the dates as the row names
+sbux_prices_df <- sbux_df[, "Adj.Close", drop=FALSE]
+rownames(sbux_prices_df) <- sbux_df$Date
+head(sbux_prices_df)
+                       
+# With Dates as rownames, you can subset directly on the dates.
+# Find indices associated with the dates 3/1/1994 and 3/1/1995.
+price_1 <- sbux_prices_df["3/1/1994", 1]
+price_2 <- sbux_prices_df["3/1/1995", 1]
+```
+
+***
+### 5 Plot the price data
+R has powerful graphical capabilities. On the right, the Starbucks closing prices are plotted as a function of time. This plot was generated with `plot(sbux_df$Adj.Close)`, the basic plotting function (more info in the documentation of plot).
+However, we should be able to generate a nicer plot, right? For one thing, a line plot makes much more sense for price time series data.
+
+#### Instructions
+* Let us make a better plot by adding the following arguments to the plot function: `type="l"` specifies a line plot, `col="blue"` indicates that the line should be blue, `lwd=2` doubles the line thickness, `ylab="Adjusted close"` adds a y-axis label and `main="Monthly closing price of SBUX"` adds a title.
+```{r, eval=FALSE}
+# Now add all relevant arguments to the plot function below to get a nicer plot
+plot(sbux_df$Adj.Close,
+    type = "l", 
+    col = "blue",
+    lwd = 2,
+    ylab = "Adjusted close",
+    main = "Monthly closing price of SBUX")
+legend(x='topleft',legend='SBUX', lty=1, lwd=2, col='blue')
+```
+
+***
+### 6 Calculate simple returns
+If you denote by $P_{t}$ the stock price at the end of month $t$, the simple return is given by:
+
+$$R_{t} = \frac{P_{t}-P_{t-1}}{P_{t-1}}$$,
+
+the percentage price difference.
+
+
+Your task in this exercise is to compute the simple returns for every time point n. The fact that R is vectorized makes that relatively easy. In case you would like to calculate the price difference over time, you can use
+
+
+`sbux_prices_df[2:n,1] - sbux_prices_df[1:(n-1),1]`
+
+Think about why this indeed calculates the price difference for all time periods. The first vector contains all prices, except the price on the first day. The second vector contains all prices except the price on the last day. Given the fact that R takes the element-wise difference of these vectors, you get ${P_{t}-P_{t-1}}$ for every $t$.

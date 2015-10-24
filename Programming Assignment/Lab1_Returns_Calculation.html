@@ -68,6 +68,7 @@ img {
 </div>
 
 
+<hr />
 <div id="load-the-monthly-starbucks-return-data" class="section level3">
 <h3>1 Load the monthly Starbucks return data</h3>
 <p>In this first lab, you will analyze the monthly stock returns of Starbucks (ticker: SBUX). Let us get started by downloading the monthly return data from <a href="http://assets.datacamp.com/course/compfin/sbuxPrices.csv" class="uri">http://assets.datacamp.com/course/compfin/sbuxPrices.csv</a>, and by using the <code>read.csv()</code> function. Type <code>?read.table</code> in the console to consult the help file. In the <code>read.csv()</code> function, you should indicate that the data in the CSV file has a <code>header</code> (header argument) and that strings should not be interpreted as factors (<code>stringsAsFactors</code> argument).</p>
@@ -112,6 +113,7 @@ tail (sbux_df)
 
 # Get the class of the Date column of 'sbux_df'
 class(sbux_df$Date)</code></pre>
+<hr />
 </div>
 </div>
 <div id="extract-the-price-data" class="section level3">
@@ -129,6 +131,7 @@ sbux_df[1:5, 2]
 sbux_df$Adj.Close[1:5]
 
 closing_prices = sbux_df[,2, drop = F]</code></pre>
+<hr />
 </div>
 </div>
 <div id="find-indices-associated-with-the-dates-311994-and-311995" class="section level3">
@@ -149,7 +152,59 @@ index_2 &lt;- which(sbux_df$Date == &quot;3/1/1995&quot;)
 
 # Extract prices between 3/1/1994 and 3/1/1995
 some_prices &lt;- sbux_df[index_1:index_2, &quot;Adj.Close&quot;]</code></pre>
+<hr />
 </div>
+</div>
+<div id="subset-directly-on-dates" class="section level3">
+<h3>5 Subset directly on dates</h3>
+<p>The way you selected the data from a specific trading day in the previous exercise was not very convenient, right? When you create a data frame that has the dates of the stock price as row names, you can select the price on a specific day much more easily. The sample code on the right creates a new data frame <code>sbux_prices_df</code> that has the trading days as row names. You can select the price on 3/1/1994 now simply with <code>sbux_prices_df[&quot;3/1/1994&quot;, 1]</code>.</p>
+<div id="instructions-2" class="section level4">
+<h4>Instructions</h4>
+<ul>
+<li>Assign to price_1 the Starbucks stock price on 3/1/1994.</li>
+<li>Assign to price_2 the Starbucks stock price on 3/1/1995.</li>
+</ul>
+<pre class="r"><code># The sbux_df data frame is already loaded in your work space
+
+# Create a new data frame that contains the price data with the dates as the row names
+sbux_prices_df &lt;- sbux_df[, &quot;Adj.Close&quot;, drop=FALSE]
+rownames(sbux_prices_df) &lt;- sbux_df$Date
+head(sbux_prices_df)
+                       
+# With Dates as rownames, you can subset directly on the dates.
+# Find indices associated with the dates 3/1/1994 and 3/1/1995.
+price_1 &lt;- sbux_prices_df[&quot;3/1/1994&quot;, 1]
+price_2 &lt;- sbux_prices_df[&quot;3/1/1995&quot;, 1]</code></pre>
+<hr />
+</div>
+</div>
+<div id="plot-the-price-data" class="section level3">
+<h3>5 Plot the price data</h3>
+<p>R has powerful graphical capabilities. On the right, the Starbucks closing prices are plotted as a function of time. This plot was generated with <code>plot(sbux_df$Adj.Close)</code>, the basic plotting function (more info in the documentation of plot). However, we should be able to generate a nicer plot, right? For one thing, a line plot makes much more sense for price time series data.</p>
+<div id="instructions-3" class="section level4">
+<h4>Instructions</h4>
+<ul>
+<li>Let us make a better plot by adding the following arguments to the plot function: <code>type=&quot;l&quot;</code> specifies a line plot, <code>col=&quot;blue&quot;</code> indicates that the line should be blue, <code>lwd=2</code> doubles the line thickness, <code>ylab=&quot;Adjusted close&quot;</code> adds a y-axis label and <code>main=&quot;Monthly closing price of SBUX&quot;</code> adds a title.</li>
+</ul>
+<pre class="r"><code># Now add all relevant arguments to the plot function below to get a nicer plot
+plot(sbux_df$Adj.Close,
+    type = &quot;l&quot;, 
+    col = &quot;blue&quot;,
+    lwd = 2,
+    ylab = &quot;Adjusted close&quot;,
+    main = &quot;Monthly closing price of SBUX&quot;)
+legend(x='topleft',legend='SBUX', lty=1, lwd=2, col='blue')</code></pre>
+<hr />
+</div>
+</div>
+<div id="calculate-simple-returns" class="section level3">
+<h3>6 Calculate simple returns</h3>
+<p>If you denote by <span class="math">\(P_{t}\)</span> the stock price at the end of month <span class="math">\(t\)</span>, the simple return is given by:</p>
+<p><span class="math">\[R_{t} = \frac{P_{t}-P_{t-1}}{P_{t-1}}\]</span>,</p>
+<p>the percentage price difference.</p>
+<p>Your task in this exercise is to compute the simple returns for every time point n. The fact that R is vectorized makes that relatively easy. In case you would like to calculate the price difference over time, you can use</p>
+<p><code>sbux_prices_df[2:n,1] - sbux_prices_df[1:(n-1),1]</code></p>
+<p>Think about why this indeed calculates the price difference for all time periods. The first vector contains all prices, except the price on the first day. The second vector contains all prices except the price on the last day. Given the fact that R takes the element-wise difference of these vectors, you get <span class="math">\({P_{t}-P_{t-1}}\)</span> for every t.</p>
 </div>
 
 
