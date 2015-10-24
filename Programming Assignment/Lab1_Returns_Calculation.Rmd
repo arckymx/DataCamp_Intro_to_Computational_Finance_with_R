@@ -4,7 +4,7 @@ author: "T.A. Meraxa"
 date: "October 23, 2015"
 output: html_document
 ---
-
+***
 ### 1 Load the monthly Starbucks return data
 
 In this first lab, you will analyze the monthly stock returns of Starbucks (ticker: SBUX).
@@ -24,7 +24,7 @@ data_url <- "http://assets.datacamp.com/course/compfin/sbuxPrices.csv"
 sbux_df <- read.csv(data_url, header = T, stringsAsFactors = F)
 ```
 
-
+***
 ### 2 Get a feel for the data
 
 Before you analyze return data, it is a good idea to have (at least) a quick look at the data. R has a number of functions that help you do that:
@@ -54,7 +54,7 @@ tail (sbux_df)
 class(sbux_df$Date)
 ```
 
-
+***
 ### 3 Extract the price data
 
 You can use square brackets to extract data from the sbux_df data frame like this ``sbux_df[rows, columns]``. To specify which rows or columns to extract, you have several options:
@@ -77,7 +77,7 @@ sbux_df$Adj.Close[1:5]
 closing_prices = sbux_df[,2, drop = F]
 ```
 
-
+***
 ### 4 Find indices associated with the dates 3/1/1994 and 3/1/1995
 
 It will often be useful to select stock data between certain dates. Advanced users are advised to look at the xts (http://www.rdocumentation.org/packages/xts) package. However, base R also provides sufficient functionality to do this.
@@ -99,3 +99,5 @@ index_2 <- which(sbux_df$Date == "3/1/1995")
 some_prices <- sbux_df[index_1:index_2, "Adj.Close"]
 
 ```
+
+***
