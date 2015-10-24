@@ -1,0 +1,360 @@
+---
+title: "Lab2 Random Variables and Probabilities"
+author: "Meraxa"
+date: "September, 2015"
+output: html_document
+---
+
+***
+### 1. Compute probabilities
+
+In this lab you will become more familiar with random variables and probability distributions.
+Suppose $X$ is a normally distributed random variable with a mean $0.05$ and a variance $(0.10)^2$. Start by computing some probabilities.
+Probabilities for normally distributed random variables can be computed with the function `pnorm()`. For instance, if $Z$ is a standard normal random variable, $Pr(Z \le 0.5)$ can be computed with `pnorm(0.5)`. You can supply the mean and the standard deviation of the normal distribution via the arguments mean and sd, respectively.
+
+#### Intstructions
+* Assign to mu_x the mean of X.
+* Assign to sigma_x the standard deviation of X.
+* Compute the following probabilities and print the result to the console:
+    + Pr(X > 0.10)
+    + Pr(X < -0.10)
+    + Pr(-0.05 < X < 0.15)
+
+```{r, eval=FALSE}
+# X ~ N(0.05, (0.10)^2)
+mu_x = 0.05
+sigma_x = 0.10 
+
+# Pr(X > 0.10)
+1 - pnorm(.10, mean=mu_x, sd=sigma_x)
+
+# Pr(X < -0.10)
+pnorm(-.10, mean=mu_x, sd=sigma_x)
+
+# Pr(-0.05 < X < 0.15)
+x = pnorm(-0.05, mean=mu_x, sd=sigma_x)
+y = pnorm(0.15, mean=mu_x, sd=sigma_x)
+y-x
+```
+
+***
+### 2. Compute quantiles
+
+Continue with computing quantiles of the normally distributed random variable $X$ with a mean $0.05$ and a variance $(0.10)^2$.
+
+Quantiles of normally distributed random variables can be computed with the function `qnorm()`. For instance, if `Z` is a standard normal random variable, the 10% quantile can be computed with `qnorm(0.1)`. You can supply the mean and the standard deviation of the normal distribution via the arguments `mean` and `sd`, respectively.
+
+#### Instructions
+* Compute the 1%, 5%, 95% and 99% quantile with a single command. Do not assign it to a variable, just print it to the console.
+
+
+```{r, eval=FALSE}
+# 1%, 5%, 95% and 99% quantile
+qnorm(c(0.01, 0.05, 0.95, 0.99), mean = mu_x, sd = sigma_x)
+```
+
+***
+### 3. Compute densities
+
+Now consider two stocks: Microsoft (ticker: MSFT) and Starbucks (ticker: SBUX). Let $X$ denote the monthly return on the Microsoft stock and let $Y$ denote the monthly return on the Starbucks stock. Assume that $X$ is normally distributed with a mean $0.05$ and a variance $(0.10)^2$, and that $Y$ is normally distributed with a mean $0.025$ and a variance $(0.05)^2$.
+
+Values of a normal density can be computed with function `dnorm()`. For instance, the value of the standard normal density at 0 can be computed with  `dnorm(0)`. You can supply the mean and the standard deviation of the normal distribution via the arguments `mean` and `sd`, respectively.
+
+#### Instructions
+* For the grid of values in `x_vals`, compute the values of the assumed normal density for the return on Microsoft stock and assign it to `MSFT`.
+* For the grid of values in `x_vals`, compute the values of the assumed normal density for the return on Starbucks stock and assign it to `SBUX`.
+
+```{r, eval=FALSE}
+# Normally distributed monthly returns
+x_vals <- seq(-0.25, 0.35, length.out = 100)
+MSFT <- dnorm(x_vals, mean = 0.05, sd = 0.10)
+SBUX <- dnorm(x_vals, mean = 0.025, sd = 0.05)
+```
+
+***
+### 4. Plot normal curve
+
+Continue with the two stocks. The aim is to produce a single plot containing the two assumed normal curves. Start with plotting the normal curve for the return on Microsoft stock.
+
+With `plot(x, y)`, you can plot the values of `y` on the y-axis against the values of `x` on the x-axis. You can customize the plot in many ways through additional arguments (http://www.rdocumentation.org/packages/graphics/functions/plot.default): set `type = "l"` to plot the data as a connected line, use `col` to specify the line color, set axis labels with `xlab` and `ylab`, or set axis limits with  `xlim` and `ylim`.
+
+#### Instructions
+* Plot a line for the values of the assumed normal density for the return on Microsoft stock (MSFT) against `x_vals`.
+* Customize the plot in the following way: use a blue line, set the y-axis label to `"Normal curves"`, and set the y-axis to be in the interval $[0,8]$.
+
+
+```{r, eval=FALSE}
+# MSFT and x_vals are still in your workspace
+
+# Normal curve for MSFT
+plot (x_vals, MSFT,
+    type = "l",
+    lwd = 2,
+    col  = "blue",
+    ylab = "Normal curves",
+    xlim=c(-1, 1), 
+    ylim=c(0, 8)
+    )
+```
+
+***
+### 5. Add second normal curve
+Now add the normal curve for the return on Starbucks stock to the plot.
+
+You can add lines to a plot with `lines(x, y)`. Furthermore, you can specify the line color with the `col` argument.
+
+Note that a plot legend is added for you in the code on the right.
+
+#### Instructions
+* Add a red line for the values of the assumed normal density for the return on Starbucks stock (`SBUX`) against `x_vals`.
+```{r, eval=FALSE}
+# MSFT, SBUX and x_vals are still in your workspace
+
+# Normal curve for MSFT
+plot(x_vals, MSFT, type = "l", col = "blue", ylab = "Normal curves", 
+     ylim = c(0, 8))
+
+# Add a normal curve for SBUX
+lines(x_vals, SBUX, tyle = "l", col = "red")
+
+# Add a plot legend
+legend("topleft", legend = c("Microsoft", "Starbucks"), 
+       col = c("blue", "red"), lty = 1)
+```
+
+***
+### 6. Determine the value-at-risk of simple monthly returns
+
+Consider again the Microsoft stock. Assume that the simple monthly return $R$ is normally distributed with a mean $0.04$ and a variance $(0.09)^2$. The initial wealth to be invested over the month is $100,000.
+
+Determine the 1% and the 5% value-at-risk (VaR) over the month on the investment. That is, determine the loss in investment value that may occur over the next month with a 1% probability and with a 5% probability.
+
+#### Instructions
+* Assign to `mu_R` the mean of R.
+* Assign to `sigma_R` the standard deviation of R.
+* Assign to `W0` the initial wealth.
+* Compute the 1% value-at-risk and print the result to the console.
+* Compute the 5% value-at-risk and print the result to the console.
+
+```{r, eval=FALSE}
+# R ~ N(0.04, (0.09)^2) 
+mu_R <- 0.04
+sigma_R <- 0.09
+
+# Initial wealth W0 equals $100,000
+W0 <- 100000
+
+# The 1% value-at-risk
+W0 * qnorm(0.01, mean = mu_R, sd = sigma_R)
+
+# The 5% value-at-risk
+W0 * qnorm(0.05, mean = mu_R, sd = sigma_R)
+```
+
+***
+### 7. Determine the value-at-risk of continuously compounded monthly returns
+
+Instead of the simple monthly return, now look at the continuously compounded monthly return r of the Microsoft stock. Assume that $r$ is normally distributed with a mean $0.04$ and a variance $(0.09)^2$. The initial wealth to be invested over the month is $100,000.
+
+Determine the 1% and the 5% value-at-risk (VaR) over the month on the investment. That is, determine the loss in investment value that may occur over the next month with a 1% probability and with a 5% probability.
+
+Use the fact that the continuously compounded return quantile can be transformed to a simple return quantile with the transformation $R=e^r−1$. The exponential $e^r$ can easily be computed with `exp(r)`.
+
+#### Instructions
+* Assign to `mu_r` the mean of r.
+* Assign to `sigma_r` the standard deviation of r.
+* Assign to `W0` the initial wealth.
+* Compute the 1% value-at-risk and print the result to the console.
+* Compute the 5% value-at-risk and print the result to the console.
+```{r, eval=FALSE}
+# r ~ N(0.04, (0.09)^2) 
+mu_r <- 0.04
+sigma_r <- 0.09
+
+# Initial wealth W0 equals $100,000
+W0 <- 100000
+
+# The 1% value-at-risk
+W0 * (exp (qnorm(0.01, mean = mu_r, sd = sigma_r)) -1)
+
+# The 5% value-at-risk
+W0 * (exp (qnorm(0.05, mean = mu_r, sd = sigma_r)) -1)
+```
+
+***
+### 8. Compute simple monthly returns
+
+For the remaining exercises, consider a one-month investment in two Northwest stocks: Amazon and Costco.
+Suppose you buy Amazon and Costco at the end of September at $P_{A,t−1}=38.23$,$P{C,t−1}=41.11$ and then sell at the end of October for $P_{A,t}=41.29$,$P_{C,t}=41.74$. Compute the simple monthly returns for the two stocks.
+
+Note that the above prices were the actual closing prices for 2004 taken from Yahoo!.
+
+
+#### Instructions
+Assign to `PA` a vector that contains the prices of the Amazon stock.
+Assign to `PC` a vector that contains the prices of the Costco stock.
+Compute the simple monthly return on the Amazon stock and assign it to `RA`.
+Compute the simple monthly return on the Costco stock and assign it to `RC`.
+
+```{r, eval=FALSE}
+# Vectors of prices
+PA <- c(38.23,41.29)
+PC <- c(41.11,41.74)
+
+PA[2]
+
+# Simple monthly returns
+RA <- (PA[2] - PA[1])/PA [1]
+RC <- (PC[2] - PC[1])/PC [1]
+
+RA
+RC
+```
+
+***
+### 9. Compute continuously compounded monthly returns
+
+Now compute the continuously compounded monthly returns on the Amazon and Costco stocks.
+
+#### Instructions
+Compute the continuously compounded monthly return for Amazon and assign it to `rA`.
+Compute the continuously compounded monthly return for Costco and assign it to `rC`.
+
+```{r, eval=FALSE}
+# Continuously compounded returns
+rA <- log(RA +1)
+rC <- log(RC +1)
+
+rA
+rC
+```
+
+***
+### 10. Compute simple total returns and dividend yields
+
+Suppose Amazon paid a $0.10 per share cash dividend at the end of October. Compute the monthly simple total return on Amazon and the monthly dividend yield.
+
+#### Instructions
+* Assign to `DA` the cash dividend per share.
+* Compute the monthly simple total return and assign it to `RA_total`.
+* Compute the monthly dividend yield and assign it to `DY`.
+
+```{r, eval=FALSE}
+# The prices for Amazon (PA) are still in your workspace
+
+# Cash dividend per share
+DA <- 0.10
+
+# Simple total return
+RA_total <- (PA[2]-PA[1]+DA)/PA[1]
+
+# Dividend yield
+DY <- DA/PA[1]
+
+RA_total
+DY
+```
+
+***
+### 11. Compute annual returns
+
+Suppose the monthly returns on Amazon are equal to `RA` every month for one year. Compute the simple annual returns, as well as the continuously compounded annual returns.
+
+#### Instructions
+* Compute the simple annual return and assign it to `RA_annual`.
+* Compute the continuously compounded annual return and assign it to `rA_annual`.
+
+```{r, eval=FALSE}
+# The simple monthly return on Amazon (RA) is still in your workspace
+
+# Simple annual return
+RA_annual <- ((1 + RA))^12-1
+
+# Continuously compounded annual return
+rA_annual <- log(1 + RA_annual)
+
+RA_annual
+rA_annual
+```
+
+***
+### 12. Compute portfolio shares and portfolio returns
+
+At the end of September 2004, suppose you have $10,000 to invest in Amazon and Costco over the next month.
+
+Compute your portfolio shares if you invest $8,000 in Amazon and $2,000 in Costco. Moreover, compute the simple monthly return on the portfolio and assume that no dividends were paid.
+
+#### Instructions
+* Compute the portfolio share of your Amazon stocks and assign it to xA.
+* Compute the portfolio share of your Costco stocks and assign it to xC.
+* Compute the simple monthly return on the portfolio and print the result to the console.
+
+```{r, eval=FALSE}
+# The simple returns on Amazon (RA) and Costco (RC) are still in your workspace
+
+# Portfolio shares
+xA <- 8000/10000
+xC <- 2000/10000
+
+# Simple monthly return
+xA*RA + xC*RC
+```
+
+***
+### 13. Covariance matrix
+
+In this lab you will learn to draw observations from bivariate normal distributions, and explore the resulting data to familiarize yourself with relationships between two random variables.
+
+Let us assume that $X$ and $Y$ are bivariate normally distributed. Get started by defining a covariance matrix. Suppose that the standard deviations are $σ_X=0.10$ and $σ_Y=0.05$, and that the correlation is $ρ_XY=0.9$.
+
+Matrices can be created with the `matrix()` function. You should supply the values as the first argument and specify the dimensions with the `nrow` and  `ncol` arguments. For example, `matrix(c(-0.5, 0.5), nrow = 1, ncol = 2)` creates a matrix with one row and two columns. By default, the matrix is filled column by column, but you can fill the matrix row by row by setting  `byrow = TRUE`.
+
+#### Instructions
+* Compute the covariance between X and Y and assign it to sig_xy.
+* Construct the covariance matrix and assign it to Sigma_xy.
+```{r, eval=FALSE}
+# Standard deviations and correlation
+sig_x <- 0.10
+sig_y <- 0.05
+rho_xy <- 0.9
+
+# Covariance between X and Y
+sig_xy <- rho_xy*sig_x*sig_y 
+
+# Covariance matrix
+Sigma_xy <-  matrix(c(sig_x^2, sig_xy, sig_xy, sig_y^2), 2, 2, byrow=TRUE)
+```
+
+***
+### 14. Simulate data
+
+Let us continue by simulating observations from the bivariate normally distributed random variables $X$ and $Y$.
+
+Notice that the second line in the R script on the right loads the mvtnorm R package. `mvtnorm` is an R library, containing extra functionality (see mvtnorm documentation), which makes it easy to simulate data from a bivariate (or more generally, a multivariate) normal distribution. We will be using the `rmvnorm()` function from the package. If you would like to use the `mvtnorm` package at home, use the `install.packages` function to first install the package on your own computer.
+
+You can supply the mean vector and the covariance matrix via the arguments  `mean` and `sigma`, of the `rmvnorm()` function respectively. For instance, you can draw 10 observations from a bivariate standard normal distribution with `rmvnorm(10, mean = c(0, 0), sigma = diag(2))`.
+
+When you simulate data, it is often useful to have *reproducible results*. This can be achieved by setting the seed of the random number generator beforehand with the `set.seed()` function. For more information, see the documentation on random number generation.
+
+####  Instructions
+* Simulate 100 observations from the bivariate normal distributed random variables $X$ and $Y$. Use the covariance matrix `Sigma_xy` from the previous exercise and suppose that the means are $μ_X=0.05$ and $μ_Y=0.025$. Assign the result to `xy_vals`.
+* Have a look at the first few observations with the `head()` function.
+
+```{r, eval=FALSE}
+# Load the mvtnorm package
+library("mvtnorm")
+
+# The covariance matrix (Sigma_xy) is still in your workspace
+
+# Means
+mu_x <- 0.05
+mu_y <- 0.025
+
+# Simulate 100 observations
+set.seed(123)  # for reproducibility
+xy_vals <- rmvnorm(100, mean = c(mu_x, mu_y), sigma = Sigma_xy)
+  
+# Have a look at the first observations
+head(xy_vals)
+```
+
