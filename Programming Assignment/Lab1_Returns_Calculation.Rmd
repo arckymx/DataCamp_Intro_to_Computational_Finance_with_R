@@ -1,0 +1,101 @@
+---
+title: "Lab 1 Returns Calculator"
+author: "T.A. Meraxa"
+date: "October 23, 2015"
+output: html_document
+---
+
+### 1 Load the monthly Starbucks return data
+
+In this first lab, you will analyze the monthly stock returns of Starbucks (ticker: SBUX).
+Let us get started by downloading the monthly return data from http://assets.datacamp.com/course/compfin/sbuxPrices.csv, and by using the ``read.csv()`` function. Type `?read.table` in the console to consult the help file.
+In the ``read.csv()`` function, you should indicate that the data in the CSV file has a ``header`` (header argument) and that strings should not be interpreted as factors (``stringsAsFactors`` argument).
+
+#### Intstructions
+* Create a new variable ``data_url`` that contains the URL to the CSV file.
+* Create a new variable ``sbux_df`` that contains the data frame with the Starbucks data. ``sbux_df`` should be a data frame object. Data frames are rectangular data objects that contain observations in their rows and variables in their columns.
+
+
+```{r, eval=FALSE}
+# Assign the URL to the CSV file
+data_url <- "http://assets.datacamp.com/course/compfin/sbuxPrices.csv"
+
+# Load the data frame using read.csv
+sbux_df <- read.csv(data_url, header = T, stringsAsFactors = F)
+```
+
+
+### 2 Get a feel for the data
+
+Before you analyze return data, it is a good idea to have (at least) a quick look at the data. R has a number of functions that help you do that:
+
+
+* The ``str()`` function compactly displays the structure of an R object. It is arguably one of the most useful R functions.
+* The ``head()`` and ``tail()`` functions shows you the first and the last part of an R object, respectively.
+* The ``class()`` function shows you the class of an R object.
+
+#### Intstructions
+* Have a look at the structure of the ``sbux_df`` data.
+* Have a look at the first and the last part of the Starbucks prices.
+* What is the class of the Date column of the ``sbux_df`` data frame?
+
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+
+# Check the structure of 'sbux_df'
+str(sbux_df)
+
+# Check the first and last part of 'sbux_df'
+head (sbux_df)
+tail (sbux_df)
+
+
+# Get the class of the Date column of 'sbux_df'
+class(sbux_df$Date)
+```
+
+
+### 3 Extract the price data
+
+You can use square brackets to extract data from the sbux_df data frame like this ``sbux_df[rows, columns]``. To specify which rows or columns to extract, you have several options:
+
+``sbux_df[1:5, "Adj.Close"]``
+``sbux_df[1:5, 2]``
+``sbux_df$Adj.Close[1:5]``.
+These expressions will all extract the first five closing prices. If you do not provide anything for the rows (or columns), all rows (or columns) will be selected (e.g. ``sbux_df[,"Adj.Close"]``). Check this yourself by typing the different options in the console!
+Note that in the above operations, the dimension information was lost. To preserve the dimension information, add the ``drop=FALSE`` argument.
+
+#### Instructions
+* Assign to the variable ``closing_prices`` all the adjusted closing prices while preserving the dimension information.
+
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+sbux_df[1:5, "Adj.Close"]
+sbux_df[1:5, 2]
+sbux_df$Adj.Close[1:5]
+
+closing_prices = sbux_df[,2, drop = F]
+```
+
+
+### 4 Find indices associated with the dates 3/1/1994 and 3/1/1995
+
+It will often be useful to select stock data between certain dates. Advanced users are advised to look at the xts (http://www.rdocumentation.org/packages/xts) package. However, base R also provides sufficient functionality to do this.
+The ``which()`` function returns the indices for which a condition is ``TRUE``. For example: ``which(sbux_df$Date == "3/1/1994")`` returns the position of the date 3/1/1994, which indicates in this case the row number in the ```` data frame.
+
+#### Instructions
+* Assign to ``index_1`` the row number of the row that contains the price on 3/1/1994.
+* Assign to ``index_2`` the row number of the row that contains the price on 3/1/1995.
+* Assign to ``some_prices`` the SBUX closing prices between 3/1/1994 and 3/1/1995.
+
+```{r, eval=FALSE}
+# The sbux_df data frame is already loaded in your work space
+
+# Find indices associated with the dates 3/1/1994 and 3/1/1995
+index_1 <- which(sbux_df$Date == "3/1/1994")
+index_2 <- which(sbux_df$Date == "3/1/1995")
+
+# Extract prices between 3/1/1994 and 3/1/1995
+some_prices <- sbux_df[index_1:index_2, "Adj.Close"]
+
+```
