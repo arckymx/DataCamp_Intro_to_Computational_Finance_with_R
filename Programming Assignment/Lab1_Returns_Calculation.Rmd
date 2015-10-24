@@ -327,7 +327,7 @@ plot(sbux_fv, type="l", col="blue", lwd=2, ylab="Dollars",
 ***
 ### 13. Compute one simple Starbucks return
 
-Your workspace contains the vector sbux with the adjusted closing price data for Starbucks stock over the period December 2004 through December 2005. Type sbux in the console to have a look at the data.
+Your workspace contains the vector 'sbux' with the adjusted closing price data for Starbucks stock over the period December 2004 through December 2005. Type 'sbux' in the console to have a look at the data.
 
 Use the data in sbux. What is the simple monthly return between the end of December 2004 and the end of January 2005?
 ```{r, eval=FALSE}
@@ -375,6 +375,9 @@ q4
 
 *** 
 ### 17. Annual continuously compounded return
+
+Use the data 'sbux' and compute the actual annual continuously compounded return between December 2004 and December 2005.
+Your workspace still contains the vector 'sbux' with the adjusted closing price data for Starbucks stock over the period December 2004 through December 2005.
 ```{r, eval=FALSE}
 q5 <- log(sbux_df[sbux_df$Date == "12/1/2005",2])-log(sbux_df[sbux_df$Date == "12/1/2004",2])
 q5
